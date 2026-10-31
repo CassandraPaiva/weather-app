@@ -2,6 +2,7 @@ console.log("Weather app loaded");
 
 const form = document.getElementById("search-form");
 const cityInput = document.getElementById("city-input");
+const message = document.getElementById("message");
 
 const cityName = document.getElementById("city-name");
 const temperature = document.getElementById("temperature");
@@ -26,6 +27,16 @@ function describeWeather(code) {
   return "Unknown";
 }
 
+// Shows a message under the search box
+function showMessage(text, isError) {
+  message.textContent = text;
+  if (isError) {
+    message.classList.add("error");
+  } else {
+    message.classList.remove("error");
+  }
+}
+
 // Step A: city name -> coordinates
 async function getCoordinates(city) {
   const url =
@@ -34,6 +45,10 @@ async function getCoordinates(city) {
     "&count=1&language=en&format=json";
 
   const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error("Geocoding request failed");
+  }
+
   const data = await response.json();
 
   if (!data.results) {
@@ -51,6 +66,10 @@ async function getWeather(latitude, longitude) {
     "&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m";
 
   const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error("Weather request failed");
+  }
+
   const data = await response.json();
   return data;
 }
@@ -73,15 +92,24 @@ form.addEventListener("submit", async function (event) {
 
   const city = cityInput.value.trim();
   if (city === "") {
+    showMessage("Please enter a city name.", true);
     return;
   }
 
-  const place = await getCoordinates(city);
-  if (place === null) {
-    console.log("City not found");
-    return;
-  }
+  showMessage("Loading...", false);
 
-  const weather = await getWeather(place.latitude, place.longitude);
-  showWeather(place, weather);
+  try {
+    const place = await getCoordinates(city);
+    if (place === null) {
+      showMessage('City "' + city + '" not found. Check the spelling and try again.', true);
+      return;
+    }
+
+    const weather = await getWeather(place.latitude, place.longitude);
+    showWeather(place, weather);
+    showMessage("", false);
+  } catch (error) {
+    console.error(error);
+    showMessage("Could not get the weather. Check your internet connection and try again.", true);
+  }
 });
