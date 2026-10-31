@@ -5,6 +5,7 @@ const cityInput = document.getElementById("city-input");
 const message = document.getElementById("message");
 
 const cityName = document.getElementById("city-name");
+const weatherIcon = document.getElementById("weather-icon");
 const temperature = document.getElementById("temperature");
 const conditions = document.getElementById("conditions");
 const humidity = document.getElementById("humidity");
@@ -26,7 +27,21 @@ function describeWeather(code) {
   if (code === 96 || code === 99) return "Thunderstorm with hail";
   return "Unknown";
 }
-
+// Add an emoji
+function getWeatherEmoji(code) {
+  if (code === 0) return "☀️";
+  if (code === 1) return "🌤️";
+  if (code === 2) return "⛅";
+  if (code === 3) return "☁️";
+  if (code === 45 || code === 48) return "🌫️";
+  if (code >= 51 && code <= 57) return "🌦️";
+  if (code >= 61 && code <= 67) return "🌧️";
+  if (code >= 71 && code <= 77) return "❄️";
+  if (code >= 80 && code <= 82) return "🌧️";
+  if (code === 85 || code === 86) return "🌨️";
+  if (code >= 95) return "⛈️";
+  return "🌡️";
+}
 // Shows a message under the search box
 function showMessage(text, isError) {
   message.textContent = text;
@@ -80,6 +95,7 @@ function showWeather(place, weather) {
   const units = weather.current_units;
 
   cityName.textContent = place.name + ", " + place.country;
+  weatherIcon.textContent = getWeatherEmoji(current.weather_code);
   temperature.textContent = Math.round(current.temperature_2m) + units.temperature_2m;
   conditions.textContent = describeWeather(current.weather_code);
   humidity.textContent = current.relative_humidity_2m + units.relative_humidity_2m;
