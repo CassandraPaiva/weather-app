@@ -9,7 +9,36 @@
 <body>
   <main>
     <h1>Weather App</h1>
-    <p>Search for a city to see its current weather.</p>
+    <p class="subtitle">Search for a city to see its current weather.</p>
+
+    <form id="search-form">
+      <input
+        type="text"
+        id="city-input"
+        placeholder="Enter a city, e.g. Nagpur"
+        autocomplete="off"
+      >
+      <button type="submit">Search</button>
+    </form>
+
+    <p id="message"></p>
+
+    <section id="weather-card" class="card">
+      <h2 id="city-name">Sample City, Country</h2>
+      <p id="temperature">25°C</p>
+      <p id="conditions">Partly cloudy</p>
+
+      <div class="details">
+        <div class="detail">
+          <span class="detail-label">Humidity</span>
+          <span id="humidity">60%</span>
+        </div>
+        <div class="detail">
+          <span class="detail-label">Wind</span>
+          <span id="wind">10 km/h</span>
+        </div>
+      </div>
+    </section>
   </main>
 
   <script src="script.js"></script>
