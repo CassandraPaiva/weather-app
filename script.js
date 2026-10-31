@@ -77,3 +77,11 @@ form.addEventListener("submit", async function (event) {
   }
 
   const place = await getCoordinates(city);
+  if (place === null) {
+    console.log("City not found");
+    return;
+  }
+
+  const weather = await getWeather(place.latitude, place.longitude);
+  showWeather(place, weather);
+});
