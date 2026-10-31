@@ -115,3 +115,8 @@ button:hover {
   font-weight: normal;
   color: #7b8794;
 }
+
+/* Error messages */
+#message.error {
+  color: #dc2626;
+}
