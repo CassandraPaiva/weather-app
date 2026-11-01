@@ -115,11 +115,8 @@ function showWeather(place, weather) {
   wind.textContent = current.wind_speed_10m + " " + units.wind_speed_10m;
 }
 
-// Runs when the form is submitted (button click or Enter key)
-form.addEventListener("submit", async function (event) {
-  event.preventDefault();
-
-  const city = cityInput.value.trim();
+// Looks up a city and shows its weather
+async function searchCity(city) {
   if (city === "") {
     showMessage("Please enter a city name.", true);
     return;
@@ -139,12 +136,19 @@ form.addEventListener("submit", async function (event) {
     lastWeather = weather;
     showWeather(place, weather);
     showMessage("", false);
+
+    localStorage.setItem("lastCity", place.name);
   } catch (error) {
     console.error(error);
     showMessage("Could not get the weather. Check your internet connection and try again.", true);
   }
-});
+}
 
+// Runs when the form is submitted (button click or Enter key)
+form.addEventListener("submit", function (event) {
+  event.preventDefault();
+  searchCity(cityInput.value.trim());
+});
 
 // Switch between °C and °F
 unitToggle.addEventListener("click", function () {
@@ -155,3 +159,11 @@ unitToggle.addEventListener("click", function () {
     showWeather(lastPlace, lastWeather);
   }
 });
+
+
+// When the page loads, show the last searched city (if there is one)
+const savedCity = localStorage.getItem("lastCity");
+if (savedCity !== null) {
+  cityInput.value = savedCity;
+  searchCity(savedCity);
+}
