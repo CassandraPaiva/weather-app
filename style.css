@@ -134,3 +134,45 @@ button:hover {
   padding: 8px 16px;
   font-size: 0.9rem;
 }
+
+/* Dark mode (added in Step 7d) */
+#theme-toggle {
+  margin-left: 8px;
+  margin-bottom: 16px;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+}
+
+body.dark {
+  background: #121826;
+  color: #e4e7eb;
+}
+
+body.dark .subtitle,
+body.dark #message,
+body.dark #conditions {
+  color: #9aa5b1;
+}
+
+body.dark #message.error {
+  color: #f87171;
+}
+
+body.dark #city-input {
+  background: #1f2937;
+  color: #e4e7eb;
+  border-color: #374151;
+}
+
+body.dark .card {
+  background: #1f2937;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+body.dark .details {
+  border-top-color: #374151;
+}
+
+body.dark .detail-label {
+  color: #9aa5b1;
+}
