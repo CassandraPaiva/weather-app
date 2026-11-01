@@ -36,9 +36,3 @@ A simple weather app where you search for any city and see its current weather a
 - Saving user preferences with `localStorage`
 - Splitting code into small, single-purpose functions
 
-## Run it locally
-
-1. Download or clone this repository.
-2. Open `index.html` in your browser.
-
-No installation or API key is needed.
