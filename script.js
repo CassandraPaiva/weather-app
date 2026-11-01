@@ -12,6 +12,7 @@ const temperature = document.getElementById("temperature");
 const conditions = document.getElementById("conditions");
 const humidity = document.getElementById("humidity");
 const wind = document.getElementById("wind");
+const forecast = document.getElementById("forecast");
 
 // App state: current unit and the last result we showed
 let unit = "C";
@@ -92,8 +93,8 @@ async function getWeather(latitude, longitude) {
     "https://api.open-meteo.com/v1/forecast" +
     "?latitude=" + latitude +
     "&longitude=" + longitude +
-    "&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m";
-
+    "&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m" +
+    "&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto";
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error("Weather request failed");
@@ -114,6 +115,7 @@ function showWeather(place, weather) {
   conditions.textContent = describeWeather(current.weather_code);
   humidity.textContent = current.relative_humidity_2m + units.relative_humidity_2m;
   wind.textContent = current.wind_speed_10m + " " + units.wind_speed_10m;
+  showForecast(weather);
 }
 
 // Looks up a city and shows its weather
@@ -142,6 +144,27 @@ async function searchCity(city) {
   } catch (error) {
     console.error(error);
     showMessage("Could not get the weather. Check your internet connection and try again.", true);
+  }
+}
+
+// Step D: show the 5-day forecast
+function showForecast(weather) {
+  const daily = weather.daily;
+  forecast.innerHTML = "";
+
+  for (let i = 0; i < 5; i++) {
+    const date = new Date(daily.time[i] + "T00:00:00");
+    const dayName = date.toLocaleDateString("en-US", { weekday: "short" });
+
+    const day = document.createElement("div");
+    day.className = "forecast-day";
+    day.innerHTML =
+      '<span class="forecast-name">' + (i === 0 ? "Today" : dayName) + "</span>" +
+      '<span class="forecast-icon">' + getWeatherEmoji(daily.weather_code[i]) + "</span>" +
+      "<span>" + formatTemperature(daily.temperature_2m_max[i]) + "</span>" +
+      '<span class="forecast-low">' + formatTemperature(daily.temperature_2m_min[i]) + "</span>";
+
+    forecast.appendChild(day);
   }
 }
 
