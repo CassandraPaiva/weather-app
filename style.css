@@ -127,3 +127,10 @@ button:hover {
   line-height: 1;
   margin: 8px 0;
 }
+
+/* Unit toggle */
+#unit-toggle {
+  margin-bottom: 16px;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+}
