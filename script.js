@@ -4,6 +4,7 @@ const form = document.getElementById("search-form");
 const cityInput = document.getElementById("city-input");
 const message = document.getElementById("message");
 const unitToggle = document.getElementById("unit-toggle");
+const themeToggle = document.getElementById("theme-toggle");
 
 const cityName = document.getElementById("city-name");
 const weatherIcon = document.getElementById("weather-icon");
@@ -166,4 +167,29 @@ const savedCity = localStorage.getItem("lastCity");
 if (savedCity !== null) {
   cityInput.value = savedCity;
   searchCity(savedCity);
+}
+
+
+// Dark mode: apply a theme and update the button text
+function applyTheme(theme) {
+  if (theme === "dark") {
+    document.body.classList.add("dark");
+    themeToggle.textContent = "☀️ Light mode";
+  } else {
+    document.body.classList.remove("dark");
+    themeToggle.textContent = "🌙 Dark mode";
+  }
+}
+
+themeToggle.addEventListener("click", function () {
+  const isDark = document.body.classList.contains("dark");
+  const newTheme = isDark ? "light" : "dark";
+  applyTheme(newTheme);
+  localStorage.setItem("theme", newTheme);
+});
+
+// On page load, use the saved theme (if there is one)
+const savedTheme = localStorage.getItem("theme");
+if (savedTheme !== null) {
+  applyTheme(savedTheme);
 }
