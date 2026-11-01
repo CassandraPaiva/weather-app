@@ -3,6 +3,7 @@ console.log("Weather app loaded");
 const form = document.getElementById("search-form");
 const cityInput = document.getElementById("city-input");
 const message = document.getElementById("message");
+const unitToggle = document.getElementById("unit-toggle");
 
 const cityName = document.getElementById("city-name");
 const weatherIcon = document.getElementById("weather-icon");
@@ -10,6 +11,11 @@ const temperature = document.getElementById("temperature");
 const conditions = document.getElementById("conditions");
 const humidity = document.getElementById("humidity");
 const wind = document.getElementById("wind");
+
+// App state: current unit and the last result we showed
+let unit = "C";
+let lastPlace = null;
+let lastWeather = null;
 
 // Turns Open-Meteo weather codes into readable text
 function describeWeather(code) {
@@ -41,6 +47,13 @@ function getWeatherEmoji(code) {
   if (code === 85 || code === 86) return "🌨️";
   if (code >= 95) return "⛈️";
   return "🌡️";
+}
+// Formats a Celsius value in the currently selected unit
+function formatTemperature(celsius) {
+  if (unit === "F") {
+    return Math.round(celsius * 9 / 5 + 32) + "°F";
+  }
+  return Math.round(celsius) + "°C";
 }
 // Shows a message under the search box
 function showMessage(text, isError) {
@@ -96,7 +109,7 @@ function showWeather(place, weather) {
 
   cityName.textContent = place.name + ", " + place.country;
   weatherIcon.textContent = getWeatherEmoji(current.weather_code);
-  temperature.textContent = Math.round(current.temperature_2m) + units.temperature_2m;
+  temperature.textContent = formatTemperature(current.temperature_2m);
   conditions.textContent = describeWeather(current.weather_code);
   humidity.textContent = current.relative_humidity_2m + units.relative_humidity_2m;
   wind.textContent = current.wind_speed_10m + " " + units.wind_speed_10m;
@@ -122,10 +135,23 @@ form.addEventListener("submit", async function (event) {
     }
 
     const weather = await getWeather(place.latitude, place.longitude);
+    lastPlace = place;
+    lastWeather = weather;
     showWeather(place, weather);
     showMessage("", false);
   } catch (error) {
     console.error(error);
     showMessage("Could not get the weather. Check your internet connection and try again.", true);
+  }
+});
+
+
+// Switch between °C and °F
+unitToggle.addEventListener("click", function () {
+  unit = unit === "C" ? "F" : "C";
+  unitToggle.textContent = unit === "C" ? "Switch to °F" : "Switch to °C";
+
+  if (lastWeather !== null) {
+    showWeather(lastPlace, lastWeather);
   }
 });
